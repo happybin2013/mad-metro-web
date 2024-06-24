@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import React from 'react';
-console.log('API Key:', process.env.REACT_APP_OPENAI_API_KEY);
+
 const Home = () => {
   const [people, setPeople] = useState([{ name: "", location: "" }]);
   const [response, setResponse] = useState("");
@@ -131,16 +131,21 @@ const Home = () => {
         <div style={styles.result}>{response}</div>
       </div>
       <div style={{ ...styles.rightContainer, background: '#ffffff', height: 'fit-content' }}>
-        {isClient && markerPosition && (
-          <div id="map" style={styles.mapContainer}>
-            <img
-              src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+ff0000(${markerPosition[1]},${markerPosition[0]})/${markerPosition[1]},${markerPosition[0]},14/800x600?access_token=YOUR_MAPBOX_TOKEN`}
-              alt="Map with marker"
-              onError={(e) => { e.target.onerror = null; e.target.src = 'image.png'; }}
-              style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
-            />
-          </div>
-        )}
+      {isClient && markerPosition ? (
+  <div id="map" style={styles.mapContainer}>
+    <img
+      src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+ff0000(${markerPosition[1]},${markerPosition[0]})/${markerPosition[1]},${markerPosition[0]},14/800x600?access_token=YOUR_MAPBOX_TOKEN`}
+      alt="Map with marker"
+      onError={(e) => { 
+        e.target.onerror = null; 
+        e.target.src = 'image.png'; 
+      }}
+      style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+    />
+  </div>
+) : (
+  <div>지도가 표시됩니다 😊</div>
+)}
       </div>
     </div>
   );
@@ -219,6 +224,7 @@ const styles = {
     flex: "1",
     borderRadius: "5px",
     border: "1px solid #ccc",
+    width:"80%"
   },
   buttonContainer: {
     display: "flex",
