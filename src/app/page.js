@@ -92,7 +92,7 @@ const Home = () => {
     <div style={styles.container}>
       <div style={{ ...styles.leftContainer, height: 'fit-content' }}>
         <h1 style={styles.title}>
-          <span style={styles.titlePart1}>만나</span><br />
+          <span style={styles.titlePart1}>만나,</span><br />
           <span style={styles.titlePart2}>그 역이</span><br />
           <span style={styles.titlePart3}>맞나?</span>
         </h1>
