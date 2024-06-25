@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import React from "react";
-import LeafletMap from "./components/LeafletMap";
+import React from 'react';
 
 const Home = () => {
   const [people, setPeople] = useState([{ name: "", location: "" }]);
@@ -32,9 +31,9 @@ const Home = () => {
 
     const prompt =
       people.map((person) => `${person.name}는 ${person.location}`).join(", ") +
-      '의 지하철 시간 기준 중간 역을 찾아 그리고 중간 역을 openstreetmap 기준으로 검색해서 위도와 경도를 출력해 답변은 오직 json 데이터의 value만을 좌표로 채워넣어 json data만을 답변할 것 { "markerPosition" : [ , ], "middlePlace" : "" }';
+      "중간 역을 찾아 그리고 중간 역의 위도와 경도를 출력해 답변은 오직 json 데이터의 value만을 좌표로 채워넣어 json data만을 답변할 것 { \"markerPosition\" : [ , ], \"middlePlace\" : \"\" }";
 
-    console.log(prompt);
+      console.log(prompt);
     try {
       const res = await fetch("/api/find-midpoint", {
         method: "POST",
@@ -49,16 +48,15 @@ const Home = () => {
       }
 
       const data = await res.json();
-      console.log("API Response:", data);
+      console.log('API Response:', data);
 
       if (!data.choices || data.choices.length === 0) {
         throw new Error("No choices found in the response data");
       }
-
       const contentObject = JSON.parse(
         data.choices[0].message.content.replace(/```json|```/g, "").trim()
       );
-      console.log("Parsed Content Object:", contentObject);
+      console.log('Parsed Content Object:', contentObject);
 
       if (!contentObject.markerPosition) {
         throw new Error("Marker position not found in the response data");
@@ -66,9 +64,7 @@ const Home = () => {
 
       setMarkerPosition(contentObject.markerPosition);
       setMiddlePlace(contentObject.middlePlace);
-      setResponse(
-        formatResponse(contentObject.markerPosition, contentObject.middlePlace)
-      );
+      setResponse(formatResponse(contentObject.markerPosition, contentObject.middlePlace));
     } catch (error) {
       console.error("Error fetching or parsing data:", error.message);
       setResponse("<데이터를 가져오거나 파싱하는 도중 오류가 발생했습니다.>");
@@ -86,24 +82,23 @@ const Home = () => {
         <p key={lat + lng} style={styles.paragraph}>
           중간 지점은 [{lat}, {lng}]
         </p>
-        <p style={styles.paragraph}>중간 역은 {middlePlace} 입니다</p>
+        <p style={styles.paragraph}>
+          중간 역은 {middlePlace} 입니다
+        </p>
       </div>
     );
   };
 
   return (
     <div style={styles.container}>
-      <div style={{ ...styles.leftContainer, height: "fit-content" }}>
+      <div style={{ ...styles.leftContainer, height: 'fit-content' }}>
         <h1 style={styles.title}>
-          <span style={styles.titlePart1}>만나,</span>
-          <br />
-          <span style={styles.titlePart2}>그 역이</span>
-          <br />
+          <span style={styles.titlePart1}>만나</span><br />
+          <span style={styles.titlePart2}>그 역이</span><br />
           <span style={styles.titlePart3}>맞나?</span>
         </h1>
         <p style={styles.description}>
-          사람들의 이름과 지역을 입력하고,
-          <br />
+          사람들의 이름과 지역을 입력하고,<br />
           함께 만나기 좋은 역을 추천받으세요.
         </p>
         <div style={styles.inputWrapper}>
@@ -120,9 +115,7 @@ const Home = () => {
                 type="text"
                 placeholder="지역"
                 value={person.location}
-                onChange={(e) =>
-                  handleChange(index, "location", e.target.value)
-                }
+                onChange={(e) => handleChange(index, "location", e.target.value)}
                 style={styles.input}
               />
             </div>
@@ -132,31 +125,32 @@ const Home = () => {
           <button onClick={addPerson} style={styles.button}>
             사람 추가
           </button>
-          <button
-            onClick={getMidpoint}
-            style={{ ...styles.button, ...styles.findButton }}
-          >
+          <button onClick={getMidpoint} style={{ ...styles.button, ...styles.findButton }}>
             {loading ? "찾는 중..." : "중간 지점 찾기"}
           </button>
         </div>
         <div style={styles.result}>{response}</div>
       </div>
-      <div
-        style={{
-          ...styles.rightContainer,
-          background: "#ffffff",
-          height: "fit-content",
-        }}
-      >
-        {isClient && markerPosition ? (
-          <LeafletMap markerPosition={markerPosition} />
-        ) : (
-          <div>지도가 표시됩니다 😊</div>
-        )}
+      <div style={{ ...styles.rightContainer, background: '#ffffff', height: 'fit-content' }}>
+      {isClient && markerPosition ? (
+  <div id="map" style={styles.mapContainer}>
+    <img
+      src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+ff0000(${markerPosition[1]},${markerPosition[0]})/${markerPosition[1]},${markerPosition[0]},14/800x600?access_token=pk.eyJ1IjoicGxvZGV2IiwiYSI6ImNseHVuNGUzMTBoY3cycXBqdGVpbDk5eWIifQ.CW8MPCwvc0gseoQl_kPGvQ`}
+      alt="Map with marker"
+      onError={(e) => { 
+        e.target.onerror = null; 
+        e.target.src = 'image.png'; 
+      }}
+      style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+    />
+  </div>
+) : (
+  <div>지도가 표시됩니다 😊</div>
+)}
       </div>
     </div>
   );
-};
+}
 
 const styles = {
   container: {
@@ -184,7 +178,7 @@ const styles = {
     borderRadius: "15px",
     boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
     margin: "20px",
-    height: "100%",
+    height:"100%"
   },
   title: {
     fontSize: "32px",
@@ -192,9 +186,9 @@ const styles = {
     marginBottom: "20px",
     textAlign: "left",
     borderRadius: "10px",
-    backgroundColor: "#ffffff",
+    backgroundColor:"#ffffff",
     border: "4px solid #70c7ff",
-    padding: "20px",
+    padding:"20px"
   },
   titlePart1: {
     color: "#fc5bdd", // 짙은 파란색
@@ -222,7 +216,7 @@ const styles = {
   inputGroup: {
     display: "flex",
     marginBottom: "15px",
-    textAlign: "center",
+    textAlign:"center"
   },
   input: {
     padding: "10px",
@@ -231,7 +225,7 @@ const styles = {
     flex: "1",
     borderRadius: "5px",
     border: "1px solid #ccc",
-    width: "80%",
+    width:"80%"
   },
   buttonContainer: {
     display: "flex",
@@ -258,7 +252,7 @@ const styles = {
     backgroundColor: "#4b6bff",
   },
   mapContainer: {
-    height: "400px",
+    height: "100%",
     width: "100%",
     marginTop: "20px",
     borderRadius: "15px",
